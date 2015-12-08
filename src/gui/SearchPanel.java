@@ -10,22 +10,29 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.Font;
-import java.awt.ScrollPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import controller.Main;
+import controller.Menu;
 import model.Clause;
 import model.ClauseTableModel;
+import model.Library;
 
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
@@ -37,20 +44,21 @@ import javax.swing.border.BevelBorder;
  *
  */
 @SuppressWarnings("serial")
-public class SearchPanel extends JPanel {
+public class SearchPanel extends JPanel implements Observer{
     private JTextField keywordText;
     private JTextField titleText;
     private JTable table;
-    
+    private List<Action> myActions;
     private Main clauser;
     
     public SearchPanel() {
-        try {
-            clauser = new Main();
-        } catch (Exception exc) {
-            JOptionPane.showMessageDialog(this, "Error: " + exc, "Error", JOptionPane.ERROR_MESSAGE); 
-        }
-        
+        //myActions = theActions;
+//        try {
+//            clauser = new Main();
+//        } catch (Exception exc) {
+//            JOptionPane.showMessageDialog(this, "Error: " + exc, "Error", JOptionPane.ERROR_MESSAGE); 
+//        }
+//        
         setBackground(Color.WHITE);
         setLayout(null);
         
@@ -64,35 +72,21 @@ public class SearchPanel extends JPanel {
         add(internalFrame);
         internalFrame.getContentPane().setLayout(null);
         
-        JButton searchKeywordButton = new JButton(" Search Keyword");
+        JButton searchKeywordButton = new JButton("Seach Keyword");
         searchKeywordButton.setBackground(Color.WHITE);
         searchKeywordButton.setForeground(new Color(0, 0, 255));
         searchKeywordButton.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createRaisedBevelBorder(), BorderFactory.createLineBorder(Color.BLACK, 1)));
+        //searchKeywordButton.addPropertyChangeListener(listener);
         searchKeywordButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent arg0) {
-                
+              
                 try {
-                    String clause = keywordText.getText();
+                    //String clause = keywordText.getText();
+                    firePropertyChange("search", null, keywordText);
+                    
 
-                    List<Clause> clauses = null;
-
-                    if (clause != null && clause.trim().length() > 0) {
-                        clauses = clauser.searchClause(clause);
-                    } else {
-                        clauses = clauser.getAllClause();
-                    }
-                    
-                    // create the model and update the "table"
-                    ClauseTableModel model = new ClauseTableModel(clauses);
-                    
-                    table.setModel(model);
-                    
-                    
-                    for (Clause temp : clauses) {
-                        System.out.println(temp);
-                    }
-                    
                 } catch (Exception exc) {
                    // JOptionPane.showMessageDialog(EmployeeSearchApp.this, "Error: " + exc, "Error", JOptionPane.ERROR_MESSAGE); 
                 }
@@ -154,6 +148,7 @@ public class SearchPanel extends JPanel {
         searchTitleButton.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createRaisedBevelBorder(), BorderFactory.createLineBorder(Color.BLACK, 1)));
         searchTitleButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent arg0) {
             }
         });
@@ -196,6 +191,7 @@ public class SearchPanel extends JPanel {
             Class[] columnTypes = new Class[] {
                 String.class, String.class, String.class, String.class
             };
+            @Override
             @SuppressWarnings({"unchecked", "rawtypes"})
             public Class getColumnClass(int columnIndex) {
                 return columnTypes[columnIndex];
@@ -203,6 +199,7 @@ public class SearchPanel extends JPanel {
             boolean[] columnEditables = new boolean[] {
                 false, false, false, false
             };
+            @Override
             public boolean isCellEditable(int row, int column) {
                 return columnEditables[column];
             }
@@ -240,5 +237,16 @@ public class SearchPanel extends JPanel {
 //        internalFrame.getContentPane().add(labelText);
         internalFrame.setVisible(true);
 
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void update(Observable o, Object theClauses) {
+        ClauseTableModel model = null;
+        if (o instanceof Menu && theClauses instanceof List) {
+            model = new ClauseTableModel((List<Clause>) theClauses);
+            table.setModel(model);
+            
+        }
     }
 }

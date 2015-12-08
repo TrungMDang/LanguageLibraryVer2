@@ -6,6 +6,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
 /**
@@ -46,7 +47,7 @@ public class HomePanel extends JPanel {
         final JLabel Welcome = new JLabel("WELCOME TO");
         //Welcome.setBackground(new Color(204, 204, 204));
         Welcome.setBounds(200, 47, 422, 82);
-        Welcome.setHorizontalAlignment(JLabel.CENTER);
+        Welcome.setHorizontalAlignment(SwingConstants.CENTER);
         Welcome.setForeground(new Color(0, 204, 0));
         Welcome.setFont(new Font("Comic Sans MS", Font.BOLD | Font.ITALIC, 50));
        

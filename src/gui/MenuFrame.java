@@ -4,16 +4,17 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
+import javax.swing.Action;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,7 +22,6 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 
 /**
  * Menu Frame.
@@ -30,7 +30,7 @@ import javax.swing.border.CompoundBorder;
  *
  */
 @SuppressWarnings("serial")
-public class MenuFrame extends JFrame {
+public class MenuFrame extends JFrame{
     
     private static final int BUTTON_SIZE = 80;
     /**
@@ -49,11 +49,18 @@ public class MenuFrame extends JFrame {
      * Home Panel. 
      */
     private final HomePanel myHomePanel = new HomePanel();
+   
+    public SearchPanel getSearchPanel() {
+        return mySearchPanel;
+    }
     /**
      * Help Panel.
      */
     private final HelpPanel myHelpPanel = new HelpPanel();
     
+    public CreatePanel getCreatePanel() {
+        return myCreatePanel;
+    }
     /**
      * Main panel.
      */
@@ -84,7 +91,7 @@ public class MenuFrame extends JFrame {
         buildComponents();
         myMainPanel.setBackground(new Color(242,247,242));//204, 204, 255
         myMainPanel.setLayout(new BorderLayout(0, 0));
-        myMainPanel.add((JPanel) myPanelList.get(myIndex), BorderLayout.CENTER);
+        myMainPanel.add(myPanelList.get(myIndex), BorderLayout.CENTER);
         
         JLabel label = new JLabel("Version 1.0 \u00A9 2015");
         label.setForeground(new Color(0, 204, 0));
@@ -124,14 +131,15 @@ public class MenuFrame extends JFrame {
         searchButton.setFont(new Font("Comic Sans MS", Font.PLAIN, 11));
         searchButton.setBackground(Color.WHITE);
         searchButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent arg0) {
                 myMainPanel.removeAll();               
-                myMainPanel.add((JPanel) myPanelList.get(1), BorderLayout.CENTER);
+                myMainPanel.add(myPanelList.get(1), BorderLayout.CENTER);
                 myMainPanel.repaint();
                 myMainPanel.validate();
             }
         });
-        searchButton.setBounds(2, (int) dummyButton.getBounds().y + BUTTON_SIZE, 117, BUTTON_SIZE);
+        searchButton.setBounds(2, dummyButton.getBounds().y + BUTTON_SIZE, 117, BUTTON_SIZE);
         
         final Image img4 = new ImageIcon(this.getClass().getResource ("/search.png")).getImage();
         searchButton.setIcon(new ImageIcon(img4));
@@ -141,14 +149,15 @@ public class MenuFrame extends JFrame {
         createButton.setFont(new Font("Comic Sans MS", Font.PLAIN, 11));
         createButton.setBackground(new Color(242,247,242));
         createButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 myMainPanel.removeAll();               
-                myMainPanel.add((JPanel) myPanelList.get(2), BorderLayout.CENTER);
+                myMainPanel.add(myPanelList.get(2), BorderLayout.CENTER);
                 myMainPanel.repaint();
                 myMainPanel.validate();    
             }
         });
-        createButton.setBounds(2, (int) searchButton.getBounds().y + BUTTON_SIZE, 117, BUTTON_SIZE);
+        createButton.setBounds(2, searchButton.getBounds().y + BUTTON_SIZE, 117, BUTTON_SIZE);
         
         final java.awt.Image img3 = new ImageIcon(this.getClass().getResource ("/create.png")).getImage();
         createButton.setIcon(new ImageIcon(img3));
@@ -157,11 +166,12 @@ public class MenuFrame extends JFrame {
         JButton libraryButton = new JButton("");
         libraryButton.setBackground(new Color(242,247,242));
         libraryButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent arg0) {
-                ViewLibrary.main(null);
+                firePropertyChange("view", null, null);
             }
         });
-        libraryButton.setBounds(2, (int) createButton.getBounds().y + BUTTON_SIZE, 117, BUTTON_SIZE);
+        libraryButton.setBounds(2, createButton.getBounds().y + BUTTON_SIZE, 117, BUTTON_SIZE);
         
         final Image img8 = new ImageIcon(this.getClass().getResource ("/library.png")).getImage();
         libraryButton.setIcon(new ImageIcon(img8));
@@ -171,14 +181,15 @@ public class MenuFrame extends JFrame {
         homeButton.setFont(new Font("Comic Sans MS", Font.PLAIN, 11));
         homeButton.setBackground(new Color(242,247,242));
         homeButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent arg0) {
                 myMainPanel.removeAll();               
-                myMainPanel.add((JPanel) myPanelList.get(0), BorderLayout.CENTER);
+                myMainPanel.add(myPanelList.get(0), BorderLayout.CENTER);
                 myMainPanel.repaint();
                 myMainPanel.validate();
             }
         });
-        homeButton.setBounds(2, (int) libraryButton.getBounds().y + BUTTON_SIZE, 117, BUTTON_SIZE);
+        homeButton.setBounds(2, libraryButton.getBounds().y + BUTTON_SIZE, 117, BUTTON_SIZE);
         
         final Image img6 = new ImageIcon(this.getClass().getResource ("/home.png")).getImage();
         homeButton.setIcon(new ImageIcon(img6));
@@ -188,14 +199,15 @@ public class MenuFrame extends JFrame {
         helpButton.setFont(new Font("Comic Sans MS", Font.PLAIN, 11));
         helpButton.setBackground(new Color(242,247,242));
         helpButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 myMainPanel.removeAll();               
-                myMainPanel.add((JPanel) myPanelList.get(3), BorderLayout.CENTER);
+                myMainPanel.add(myPanelList.get(3), BorderLayout.CENTER);
                 myMainPanel.repaint();
                 myMainPanel.validate();
             }
         });
-        helpButton.setBounds(2,(int) homeButton.getBounds().y + BUTTON_SIZE, 117, BUTTON_SIZE);
+        helpButton.setBounds(2,homeButton.getBounds().y + BUTTON_SIZE, 117, BUTTON_SIZE);
         
         final Image img5 = new ImageIcon(this.getClass().getResource ("/help.png")).getImage();
         helpButton.setIcon(new ImageIcon(img5));
@@ -206,11 +218,12 @@ public class MenuFrame extends JFrame {
         //exitButton.setBorderPainted(false);
         
         exitButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
         });
-        exitButton.setBounds(2, (int) helpButton.getBounds().y + BUTTON_SIZE, 117, BUTTON_SIZE); 
+        exitButton.setBounds(2, helpButton.getBounds().y + BUTTON_SIZE, 117, BUTTON_SIZE); 
         exitButton.setBackground(new Color(242,247,242));
         final Image img7 = new ImageIcon(this.getClass().getResource ("/exit.png")).getImage();
         exitButton.setIcon(new ImageIcon(img7));
@@ -239,5 +252,6 @@ public class MenuFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
+
 }
 

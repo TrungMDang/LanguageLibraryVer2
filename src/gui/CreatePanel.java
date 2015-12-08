@@ -6,6 +6,8 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -17,13 +19,20 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import controller.Menu;
+import model.Clause;
+
+/**
+ * @author Emrullah, Trung (modified some codes)
+ *
+ */
 @SuppressWarnings("serial")
-public class CreatePanel extends JPanel {
+public class CreatePanel extends JPanel implements Observer {
     private JTable table;
 
     /**
      * Create Panel.
-     * @author Viktoriya Celik
+     * @author Viktoriya Celik, Trung Dang
      * @version 11/28/15
      *
      */
@@ -83,15 +92,6 @@ public class CreatePanel extends JPanel {
         table.setModel(new DefaultTableModel(
             new Object[][] {
                 {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
             },
             new String[] {
                 "Title", "Keyword", "Description", "Text"
@@ -101,6 +101,7 @@ public class CreatePanel extends JPanel {
             Class[] columnTypes = new Class[] {
                 String.class, String.class, String.class, String.class
             };
+            @Override
             @SuppressWarnings({"unchecked", "rawtypes"})
             public Class getColumnClass(int columnIndex) {
                 return columnTypes[columnIndex];
@@ -111,12 +112,28 @@ public class CreatePanel extends JPanel {
         table.getColumnModel().getColumn(3).setPreferredWidth(250);
         table.setFont(new Font("Comic Sans MS", Font.PLAIN, 11));
         
+        String title = (String) table.getModel().getValueAt(0, 0);
+        String keyword = (String) table.getModel().getValueAt(0, 1);
+        String description = (String) table.getModel().getValueAt(0, 2);
+        String text = (String) table.getModel().getValueAt(0, 3);
+        Clause newClause = new Clause(title, keyword, description, text);
+        System.out.println(title + " " + keyword + " " + description + " " + text);
+        
         JButton createButton = new JButton(" Create New Clause");
         createButton.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createRaisedBevelBorder(), BorderFactory.createLineBorder(Color.BLACK, 1)));
         createButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent arg0) {
-                JOptionPane.showMessageDialog (null, "Your Clause Added to Library!", "Title", JOptionPane.INFORMATION_MESSAGE);
+                String title = (String) table.getModel().getValueAt(0, 0);
+                String keyword = (String) table.getModel().getValueAt(0, 1);
+                String description = (String) table.getModel().getValueAt(0, 2);
+                String text = (String) table.getModel().getValueAt(0, 3);
+                Clause newClause = new Clause(title, keyword, description, text);
+                System.out.println(title + " " + keyword + " " + description + " " + text);
+                firePropertyChange("create", null, newClause);
+                
+                //JOptionPane.showMessageDialog (null, "Your Clause Added to Library!", "Title", JOptionPane.INFORMATION_MESSAGE);
             }
         });
         createButton.setForeground(Color.BLACK);
@@ -128,5 +145,23 @@ public class CreatePanel extends JPanel {
         internalFrame.getContentPane().add(createButton);
         internalFrame.setVisible(true);
 
+    }
+  
+    /**
+     * @author Trung
+     * @param o
+     * @param arg
+     */
+    @Override
+    public void update(Observable o, Object arg) {
+        if (o instanceof Menu && arg instanceof Boolean) {
+            if (((Boolean) arg).booleanValue()){
+                JOptionPane.showMessageDialog(this, "Creation of new record succeed!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Creation of new record failed!");
+            }
+            
+        }
+        
     }
 }
