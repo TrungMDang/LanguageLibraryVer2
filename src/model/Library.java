@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Properties;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
@@ -37,10 +38,13 @@ public class Library {
     public Library() {
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
-
+            
+//            Properties p = System.getProperties();
+//           p.setProperty("derby.system.home", "/LanguageLibraryTrung/");
+////            
             // connect database MyLibrary with user root and its password
             myConn = DriverManager
-                            .getConnection("jdbc:derby:F:/Programming/TCSS 360/LanguageLibraryTrung/LLDB");
+                            .getConnection("jdbc:derby:LLDB");
 
         } catch (Exception e) {
             System.out.println("Failed to connect to database");
@@ -207,7 +211,7 @@ public class Library {
 
             // connect database MyLibrary with user root and its password
             myConn = DriverManager
-                            .getConnection("jdbc:derby:F:/Programming/TCSS 360/LanguageLibraryTrung/LLDB");
+                            .getConnection("jdbc:derby:/LanguageLibraryTrung/LLDB");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -307,41 +311,46 @@ public class Library {
     }
 
     /**
-     * Trung borrowed Emrullah codes in search, Trung modified
+     * Trung borrowed Emrullah codes in search, Trung modified 
      * 
      * @return
      */
-    public DefaultTableModel viewLibray() {
-        DefaultTableModel tModel = new DefaultTableModel();
-        tModel.setColumnIdentifiers(new String[] {"Title", "Keyword", "Description", "Text"});
-        List<Clause> list = new ArrayList<>();
-        Statement myStmt = null;
-        ResultSet myRs = null;
+    public DefaultTableModel viewLibray(Object searchFor) {
+        System.err.println("Inside library view");
 
-        try {
-            myStmt = myConn.createStatement();
-            myRs = myStmt.executeQuery("select * from clause");
+        if (searchFor instanceof String) {
+            DefaultTableModel tModel = new DefaultTableModel();
+            tModel.setColumnIdentifiers(new String[] {"Title", "Keyword", "Description", "Text"});
+            List<Clause> list = new ArrayList<>();
+            Statement myStmt = null;
+            ResultSet myRs = null;
 
-            while (myRs.next()) {
-                Clause tempClause = convertRowToClause(myRs);
-                String[] rowData = new String[4];
-                rowData[0] = tempClause.gettitle();
-                rowData[1] = tempClause.getkeyword();
-                rowData[2] = tempClause.getdescription();
-                rowData[3] = tempClause.gettext();
-                tModel.addRow(rowData);
-                System.out.println(tModel.getRowCount());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
             try {
-                close(myStmt, myRs);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+                myStmt = myConn.createStatement();
+                myRs = myStmt.executeQuery("select " + searchFor +" from clause");
 
-        return tModel;
-    }
+                while (myRs.next()) {
+                    Clause tempClause = convertRowToClause(myRs);
+                    String[] rowData = new String[4];
+                    rowData[0] = tempClause.gettitle();
+                    rowData[1] = tempClause.getkeyword();
+                    rowData[2] = tempClause.getdescription();
+                    rowData[3] = tempClause.gettext();
+                    tModel.addRow(rowData);
+                    //System.out.println(tModel.getRowCount());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    close(myStmt, myRs);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return tModel;
+        }
+        return null;
+    }  
 }

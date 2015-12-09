@@ -40,24 +40,30 @@ public class MenuFrame extends JFrame{
     /**
      * Create Panel. 
      */
-    private final CreatePanel myCreatePanel = new CreatePanel();
+    private final CreatePanel myCreatePanel;
     /**
      * Search Panel. 
      */
-    private final SearchPanel mySearchPanel = new SearchPanel();
+    private final SearchPanel mySearchPanel;
     /**
      * Home Panel. 
      */
     private final HomePanel myHomePanel = new HomePanel();
+    
+    //private final ViewLibrary myViewLibraryPanel;
    
-    public SearchPanel getSearchPanel() {
-        return mySearchPanel;
-    }
     /**
      * Help Panel.
      */
     private final HelpPanel myHelpPanel = new HelpPanel();
     
+//    public ViewLibrary getViewLibraryPanel() {
+//        return myViewLibraryPanel;
+//    }
+    public SearchPanel getSearchPanel() {
+        return mySearchPanel;
+    }
+   
     public CreatePanel getCreatePanel() {
         return myCreatePanel;
     }
@@ -69,10 +75,16 @@ public class MenuFrame extends JFrame{
      * index. 
      */
     private int myIndex;
+    
     /**
      * Create the frame.
+     * 
+     * Emrullah (original), Trung (setResizable, changed look and feel, bounds)
      */
     public MenuFrame() {
+        myCreatePanel = new CreatePanel();
+        mySearchPanel = new SearchPanel();
+        //myViewLibraryPanel = new ViewLibrary();
         this.setResizable(false);
         //setBackground(new Color(255, 255, 255));
         getContentPane().setFont(new Font("Comic Sans MS", Font.PLAIN, 11));
@@ -106,8 +118,9 @@ public class MenuFrame extends JFrame{
      */
     private void buildMenu() {
     }
+    
     /**
-     * show panels.
+     * Emrullah (Original), Trung (modified colors, bounds, look and feel)
      */
     private void buildComponents() {
         myMainPanel.setBounds(140, 11, 749, 486);
@@ -168,7 +181,9 @@ public class MenuFrame extends JFrame{
         libraryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                firePropertyChange("view", null, null);
+                //firePropertyChange("view", null, null);
+                ViewLibrary.main(null);
+                
             }
         });
         libraryButton.setBounds(2, createButton.getBounds().y + BUTTON_SIZE, 117, BUTTON_SIZE);
@@ -239,6 +254,8 @@ public class MenuFrame extends JFrame{
     }
     /**
      * change apps. 
+     * 
+     * Emrullah (original)
      */
     public void next() {
         ((Component) myPanelList.get(myIndex)).setVisible(false);
@@ -247,6 +264,8 @@ public class MenuFrame extends JFrame{
     }
     /**
      * Close frame.
+     * 
+     * Emrullah (original)
      */
     public void start() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

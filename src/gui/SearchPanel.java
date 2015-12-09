@@ -93,7 +93,7 @@ public class SearchPanel extends JPanel implements Observer{
             }
         });
         searchKeywordButton.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
-        searchKeywordButton.setBounds(57, 120, 265, 50);
+        searchKeywordButton.setBounds(200, 120, 265, 50);
         final java.awt.Image img3 = new ImageIcon(this.getClass().getResource ("/search2.png")).getImage();
         searchKeywordButton.setIcon(new ImageIcon(img3));
         internalFrame.getContentPane().add(searchKeywordButton);
@@ -102,7 +102,7 @@ public class SearchPanel extends JPanel implements Observer{
         keywordLabel.setBackground(new Color(204, 204, 255));
         keywordLabel.setForeground(new Color(0, 0, 255));
         keywordLabel.setFont(new Font("Comic Sans MS", Font.BOLD | Font.ITALIC, 20));
-        keywordLabel.setBounds(120, 25, 285, 50);
+        keywordLabel.setBounds(250, 25, 285, 50);
         internalFrame.getContentPane().add(keywordLabel);
         
         keywordText = new JTextField();
@@ -117,47 +117,12 @@ public class SearchPanel extends JPanel implements Observer{
         keywordText.setText("Please Enter Keyword");
         keywordText.setToolTipText("");
         keywordText.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
-        keywordText.setBounds(27, 74, 331, 35);
+        keywordText.setBounds(200, 74, 331, 35);
         internalFrame.getContentPane().add(keywordText);
         keywordText.setColumns(10);
         
-        JLabel titleLabel = new JLabel("Enter Title: ");
-        titleLabel.setBackground(Color.WHITE);
-        titleLabel.setForeground(new Color(255, 0, 0));
-        titleLabel.setFont(new Font("Comic Sans MS", Font.BOLD | Font.ITALIC, 20));
-        titleLabel.setBounds(525, 25, 210, 50);
-        internalFrame.getContentPane().add(titleLabel);
-        
-        titleText = new JTextField();
-        titleText.setForeground(new Color(255, 0, 0));
-        titleText.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-            titleText.setText("");
-            }
-        });
-        titleText.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
-        titleText.setText("Please Enter Title");
-        titleText.setBounds(420, 74, 331, 35);
-        internalFrame.getContentPane().add(titleText);
-        titleText.setColumns(10);
-        
-        JButton searchTitleButton = new JButton(" Search Title");
-        searchTitleButton.setBackground(Color.WHITE);
-        searchTitleButton.setForeground(new Color(255, 0, 0));
-        searchTitleButton.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createRaisedBevelBorder(), BorderFactory.createLineBorder(Color.BLACK, 1)));
-        searchTitleButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-            }
-        });
-        searchTitleButton.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
-        searchTitleButton.setBounds(450, 120, 252, 50);
-        final java.awt.Image img4 = new ImageIcon(this.getClass().getResource ("/search2.png")).getImage();
-        searchTitleButton.setIcon(new ImageIcon(img4));
        
-        internalFrame.getContentPane().add(searchTitleButton);
+       
         
         JScrollPane scrollPane = new JScrollPane();
         //scrollPane.setPreferredSize(new Dimension(680, 250));

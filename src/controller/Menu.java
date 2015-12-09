@@ -19,19 +19,20 @@ import model.Library;
 public class Menu extends Observable implements PropertyChangeListener{
 
     private Library myLibrary;
-    private ViewLibrary myViewLibrary;
+    //private ViewLibrary myViewLibrary;
     
    private Observer[] myObservers;
   
     public Menu(Observer... theObservers) {
         myLibrary = new Library();
-        myViewLibrary = new ViewLibrary();
+        //myViewLibrary = new ViewLibrary();
         
         myObservers = theObservers;
         for (int i = 0; i < myObservers.length; i++){
             addObserver(myObservers[i]);
         }
-        addObserver(myViewLibrary);
+        
+        //addObserver(myViewLibrary);
     }
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
@@ -40,15 +41,31 @@ public class Menu extends Observable implements PropertyChangeListener{
             System.out.println(clauses.toArray().toString());
             setChanged();
             notifyObservers(clauses);
-        } else if ("create".equalsIgnoreCase(evt.getPropertyName())) {
+        }
+        if ("create".equalsIgnoreCase(evt.getPropertyName())) {
             boolean success = myLibrary.create(evt.getNewValue());
             setChanged();
             notifyObservers(success); 
-        } else if ("view".equalsIgnoreCase(evt.getPropertyName())) {
-            DefaultTableModel tModel = myLibrary.viewLibray();
-            
+        }
+        if ("key".equalsIgnoreCase(evt.getPropertyName())) {
+            System.err.println("Inside property view");
+
+            DefaultTableModel tModel = myLibrary.viewLibray(evt.getNewValue());
+            addObserver((Observer) evt.getOldValue());
             setChanged();
             notifyObservers(tModel);
+        }
+        if ("title".equalsIgnoreCase(evt.getPropertyName())) {
+            System.err.println("Inside property view");
+
+            DefaultTableModel tModel = myLibrary.viewLibray(evt.getNewValue());
+            addObserver((Observer) evt.getOldValue());
+            if (tModel.equals(null)) {
+                System.err.println("view failed");
+            } else {
+                setChanged();
+                notifyObservers(tModel);
+            }
         }
     }
  
